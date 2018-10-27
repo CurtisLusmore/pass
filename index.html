@@ -15,15 +15,15 @@
         }
         form {
             margin: 20vh auto 0 auto;
-            width: 200px;
+            width: 600px;
         }
         input {
             width: 100%;
             margin: 0 0 1vh 0;
+            font-size: 3em;
         }
         @media screen and (max-width: 1080px) {
             form { width: 100%; }
-            input { font-size: 3em; }
         }
     </style>
     <script>
@@ -42,6 +42,12 @@
                 password += randomCharacter();
             }
             form.password.value = password;
+        }
+        function confirmPassword(form) {
+            const passphrase = form.passphrase.value;
+            const confirm = form.confirm.value;
+            if (passphrase !== confirm) form.confirm.pattern = '';
+            else form.confirm.pattern = '.*';
         }
         function focusSelect(target) {
             target.focus();
@@ -68,7 +74,7 @@
         <input
             type="password"
             name="passphrase"
-            minlength="20"
+            title="Passphrase"
             placeholder="●●●●●●●●"
             autocomplete="off"
             autofocus
@@ -76,7 +82,17 @@
             onclick="focusSelect(this)" />
         <input
             type="password"
+            name="confirm"
+            title="Confirm"
+            placeholder="●●●●●●●●"
+            autocomplete="off"
+            autofocus
+            onkeyup="confirmPassword(this.form)"
+            onclick="focusSelect(this)" />
+        <input
+            type="password"
             name="domain"
+            title="Domain"
             placeholder="●●●●●●"
             autocomplete="off"
             onkeyup="updatePassword(this.form)"
@@ -85,7 +101,8 @@
             id="pw"
             type="password"
             name="password"
-            placeholder="●●●●●●●●●"
+            title="Copy me"
+            placeholder="●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●"
             autocomplete="off"
             onkeyup="copyTabOnly(event)"
             onclick="copy(this)" />
