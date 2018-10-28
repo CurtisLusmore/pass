@@ -59,6 +59,9 @@
                 }
             }
 
+            const length = parseInt(form.length.value);
+            form.password.placeholder = '●'.repeat(length);
+
             const passphrase = form.passphrase.value;
             const confirm = form.confirm.value;
             if (!passphrase || passphrase !== confirm) {
@@ -71,7 +74,6 @@
 
             const salt = form.salt.value;
             const incr = form.incr.value;
-            const length = parseInt(form.length.value);
             const chars = form.chars.value;
             const gen = genBytes(passphrase, salt + incr);
             let password = '';
@@ -82,12 +84,17 @@
         }
 
         setTimeout(() => {
-            if (new URLSearchParams(window.location.search).get('custom') !== null) {
-                const form = document.forms[0];
+            const params = new URLSearchParams(window.location.search);
+            const form = document.forms[0];
+            if (params.get('custom') !== null) {
                 form.incr.type = 'number';
                 form.length.type = 'number';
                 form.chars.type = 'text';
             }
+            form.incr.value = params.get('incr') || 0;
+            form.length.value = params.get('length') || 40;
+            form.chars.value = params.get('chars') || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+            updatePassword(form);
         });
     </script>
 </head>
@@ -121,19 +128,16 @@
         <input class="half"
             type="hidden"
             name="incr"
-            value="0"
             onclick="this.select()"
             onchange="updatePassword(this.form)" />
         <input class="half"
             type="hidden"
             name="length"
-            value="40"
             onclick="this.select()"
             onchange="updatePassword(this.form)" />
         <input
             type="hidden"
             name="chars"
-            value="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()"
             onclick="this.select()"
             onkeyup="updatePassword(this.form)" />
         <input
