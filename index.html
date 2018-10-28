@@ -80,7 +80,7 @@
             }
             form.password.value = password;
         }
-        
+
         setTimeout(() => {
             if (new URLSearchParams(window.location.search).get('custom') !== null) {
                 const form = document.forms[0];
@@ -100,6 +100,7 @@
             placeholder="●●●●●●●●"
             autocomplete="off"
             autofocus
+            onclick="this.select()"
             onkeyup="updatePassword(this.form)" />
         <input
             type="password"
@@ -107,6 +108,7 @@
             title="Confirm"
             placeholder="●●●●●●●●"
             autocomplete="off"
+            onclick="this.select()"
             onkeyup="updatePassword(this.form)" />
         <input
             type="password"
@@ -114,21 +116,25 @@
             title="Salt"
             placeholder="●●●●●●"
             autocomplete="off"
+            onclick="this.select()"
             onkeyup="updatePassword(this.form)" />
         <input class="half"
             type="hidden"
             name="incr"
             value="0"
+            onclick="this.select()"
             onchange="updatePassword(this.form)" />
         <input class="half"
             type="hidden"
             name="length"
             value="40"
+            onclick="this.select()"
             onchange="updatePassword(this.form)" />
         <input
             type="hidden"
             name="chars"
             value="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()"
+            onclick="this.select()"
             onkeyup="updatePassword(this.form)" />
         <input
             type="password"
@@ -136,8 +142,8 @@
             title="Copy me"
             placeholder="●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●"
             autocomplete="off"
-            onkeyup="limitInput(event)"
-            onclick="copy(this)" />
+            onclick="copy(this)"
+            onkeypress="limitInput(event)" />
     </form>
 </body>
 </html>
