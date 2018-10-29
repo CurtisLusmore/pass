@@ -128,23 +128,25 @@
         <input class="half"
             type="hidden"
             name="incr"
+            title="Increment count"
             onclick="this.select()"
             onchange="updatePassword(this.form)" />
         <input class="half"
             type="hidden"
             name="length"
+            title="Password length"
             onclick="this.select()"
             onchange="updatePassword(this.form)" />
         <input
             type="hidden"
             name="chars"
+            title="Password character set"
             onclick="this.select()"
             onkeyup="updatePassword(this.form)" />
         <input
             type="password"
             name="password"
             title="Copy me"
-            placeholder="●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●"
             autocomplete="off"
             onclick="copy(this)"
             onkeypress="limitInput(event)" />
