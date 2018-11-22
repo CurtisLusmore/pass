@@ -5,28 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>●●●●●●●●</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body{
-            margin: 0;
-            padding: 5vw;
-        }
-        form {
-            margin: 20vh auto 0 auto;
-            width: 600px;
-        }
-        input {
-            width: 100%;
-            margin: 0 0 1vh 0;
-            font-size: 3em;
-            border: none;
-        }
-        input.half {
-            width: 49%;
-        }
-        @media screen and (max-width: 1080px) {
-            form { width: 100%; }
-        }
-    </style>
+    <script src="main.js"></script>
+    <link rel="stylesheet" href="style.css">
     <script>
         function limitInput(event) {
             if (event.ctrlKey && event.key === 'c') return;
@@ -46,30 +26,18 @@
         });
 
         async function updatePassword(form) {
-            async function sha256(str) {
-                const buffer = new TextEncoder('utf-8').encode(str);
-                return new Uint8Array(await crypto.subtle.digest('SHA-256', buffer));
-            }
-
-            async function* genBytes(phrase1, phrase2) {
-                for (let index = 0;; index += 1) {
-                    const hash = await sha256(JSON.stringify([phrase1, phrase2, index]));
-                    for(let byte of hash)
-                        yield byte;
-                }
-            }
-
             const length = parseInt(form.length.value);
             form.password.placeholder = '●'.repeat(length);
 
+            const { salt: storedSalt, hash: storedHash } = JSON.parse(localStorage.getItem('pass'));
             const passphrase = form.passphrase.value;
-            const confirm = form.confirm.value;
-            if (!passphrase || passphrase !== confirm) {
+            const hash = await sha256String(JSON.stringify([passphrase, storedSalt]));
+            if (hash !== storedHash) {
                 form.password.value = '';
-                form.confirm.pattern = '';
+                form.passphrase.className = 'invalid';
                 return;
             } else {
-                form.confirm.pattern = '.*';
+                form.passphrase.className = null;
             }
 
             const salt = form.salt.value;
@@ -84,8 +52,13 @@
         }
 
         setTimeout(() => {
-            const params = new URLSearchParams(window.location.search);
             const form = document.forms[0];
+            const { salt, hash } = JSON.parse(localStorage.getItem('pass')) || {};
+            if (!salt && ! hash) {
+                window.location = './setup';
+                return;
+            }
+            const params = new URLSearchParams(window.location.search);
             if (params.get('custom') !== null) {
                 form.incr.type = 'number';
                 form.length.type = 'number';
@@ -107,14 +80,6 @@
             placeholder="●●●●●●●●"
             autocomplete="off"
             autofocus
-            onclick="this.select()"
-            onkeyup="updatePassword(this.form)" />
-        <input
-            type="password"
-            name="confirm"
-            title="Confirm"
-            placeholder="●●●●●●●●"
-            autocomplete="off"
             onclick="this.select()"
             onkeyup="updatePassword(this.form)" />
         <input

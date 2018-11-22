@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>●●●●●●●●</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./../main.js"></script>
+    <link rel="stylesheet" href="./../style.css">
+    <script>
+        async function updateForm(form) {
+            const passphrase = form.passphrase.value;
+            const confirm = form.confirm.value;
+            const submit = form.submit;
+            if (passphrase !== confirm) {
+                form.confirm.className = 'invalid';
+                form.submit.disabled = true;
+                return;
+            } else {
+                form.submit.disabled = false;
+                form.confirm.className = null;
+            }
+        }
+
+        async function submitForm(event) {
+            event.preventDefault();
+            const form = event.target;
+            const passphrase = form.passphrase.value;
+            const salt = arrayToHex(getRandomValues(64));
+            const hash = await sha256String(JSON.stringify([passphrase, salt]));
+            localStorage.setItem('pass', JSON.stringify({ salt, hash }));
+            window.location = '..';
+        }
+
+        setTimeout(() => {
+            const form = document.forms[0];
+            updateForm(form);
+        });
+    </script>
+</head>
+<body>
+    <form onsubmit="submitForm(event)">
+        <input
+            type="password"
+            name="passphrase"
+            title="Passphrase"
+            placeholder="●●●●●●●●"
+            autocomplete="off"
+            autofocus
+            onclick="this.select()"
+            onkeyup="updateForm(this.form)" />
+        <input
+            type="password"
+            name="confirm"
+            title="Confirm"
+            placeholder="●●●●●●●●"
+            autocomplete="off"
+            onclick="this.select()"
+            onkeyup="updateForm(this.form)" />
+        <input
+            type="submit"
+            name="submit"
+            title="Submit"
+            value="Submit" />
+    </form>
+</body>
+</html>

@@ -1,0 +1,23 @@
+body{
+    margin: 0;
+    padding: 5vw;
+}
+form {
+    margin: 20vh auto 0 auto;
+    width: 600px;
+}
+input {
+    width: 100%;
+    margin: 0 0 1vh 0;
+    font-size: 3em;
+    border: none;
+}
+input.invalid {
+    box-shadow: 0 0 0.5vh #ff0000;
+}
+input.half {
+    width: 49%;
+}
+@media screen and (max-width: 1080px) {
+    form { width: 100%; }
+}
