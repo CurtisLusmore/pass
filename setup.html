@@ -30,7 +30,7 @@
             const salt = arrayToHex(getRandomValues(64));
             const hash = await sha256String(JSON.stringify([passphrase, salt]));
             localStorage.setItem('pass', JSON.stringify({ salt, hash }));
-            window.location = '..';
+            window.location = './';
         }
 
         setTimeout(() => {
