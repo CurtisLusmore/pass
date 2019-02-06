@@ -16,16 +16,14 @@
             event.preventDefault();
         }
 
-        function copy(target) {
-            target.select();
-            document.execCommand('copy');
+        function copy(event) {
+            navigator.clipboard.writeText(event.target.value);
+            event.stopPropagation();
         }
 
-        document.addEventListener('copy', function (ev) {
-            if (ev.target.name !== 'password') return;
-            ev.preventDefault();
-            ev.clipboardData.setData('text/plain', ev.target.value);
-        });
+        function wipeClipboard() {
+            navigator.clipboard.writeText('');
+        }
 
         async function updatePassword(form) {
             const length = parseInt(form.length.value);
@@ -73,7 +71,7 @@
         });
     </script>
 </head>
-<body>
+<body onclick="wipeClipboard();">
     <form>
         <input
             type="password"
@@ -115,7 +113,8 @@
             name="password"
             title="Copy me"
             autocomplete="off"
-            onclick="copy(this)"
+            onclick="copy(event)"
+            onfocus="copy(event)"
             onkeypress="limitInput(event)" />
     </form>
 </body>

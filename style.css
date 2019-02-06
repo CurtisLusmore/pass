@@ -14,6 +14,7 @@ input {
 }
 input.invalid {
     box-shadow: 0 0 0.5vh #ff0000;
+    outline: none;
 }
 input.half {
     width: 49%;
