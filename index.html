@@ -17,6 +17,7 @@
         }
 
         function copy(event) {
+            event.target.select();
             navigator.clipboard.writeText(event.target.value);
             event.stopPropagation();
         }
@@ -29,10 +30,10 @@
             const length = parseInt(form.length.value);
             form.password.placeholder = '●'.repeat(length);
 
-            const { salt: storedSalt, hash: storedHash } = JSON.parse(localStorage.getItem('pass'));
+            const { salt: storedSalt, hash: storedHash } = JSON.parse(localStorage.getItem('pass') || '{}');
             const passphrase = form.passphrase.value;
             const hash = await sha256String(JSON.stringify([passphrase, storedSalt]));
-            if (hash !== storedHash) {
+            if (storedHash && hash !== storedHash) {
                 form.password.value = '';
                 form.passphrase.className = 'invalid';
                 return;
@@ -52,13 +53,13 @@
         }
 
         setTimeout(() => {
+            const params = new URLSearchParams(window.location.search);
             const form = document.forms[0];
             const { salt, hash } = JSON.parse(localStorage.getItem('pass')) || {};
-            if (!salt && ! hash) {
+            if (!salt && !hash && params.get('anon') === null) {
                 window.location = './setup';
                 return;
             }
-            const params = new URLSearchParams(window.location.search);
             if (params.get('custom') !== null) {
                 form.incr.type = 'number';
                 form.length.type = 'number';
